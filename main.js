@@ -44,15 +44,19 @@ addEventListener("DOMContentLoaded", function() {
   var imageArray = loadImages("assets/images/", pathArray, function() {
     leftToLoad -= 1;
     if (leftToLoad < 1) {
-      startGame();
+      frame();
     };
   });
-  console.log(imageArray);
-  function startGame() {
-    setInterval(function() {
-      context.fillStyle = "#fff";
-      context.fillRect(0, 0, 800, 600);
-      context.fill();
-    });
+  var animate = window.requestAnimationFrame || setTimeout;
+  var previous = Date.now(), now, delta;
+  function frame() {
+    now = Date.now()
+    delta = now - previous;
+    previous = now;
+    console.log(delta);
+    context.fillStyle = "#000";
+    context.fillRect(0, 0, 800, 600);
+    context.fill();
+    animate(frame);
   };
 });
