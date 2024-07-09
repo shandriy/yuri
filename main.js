@@ -24,4 +24,35 @@ addEventListener("DOMContentLoaded", function() {
   resize();
   addEventListener("resize", resize);
   addEventListener("focus", resize);
-})
+  function loadImage(path, onload) {
+    var image = new Image();
+    image.addEventListener("load", onload);
+    image.src = path;
+    return image;
+  };
+  function loadImages(prefix, pathArray, onload) {
+    var length = pathArray.length, out = [];
+    for (var i = 0; i < length; i += 1) {
+      out.push(loadImage(prefix + pathArray[i], onload));
+    };
+    return out;
+  };
+  var pathArray = [
+    "temp.jpg"
+  ];
+  var leftToLoad = pathArray.length;
+  var imageArray = loadImages("assets/images/", pathArray, function() {
+    leftToLoad -= 1;
+    if (leftToLoad < 1) {
+      startGame();
+    };
+  });
+  console.log(imageArray);
+  function startGame() {
+    setInterval(function() {
+      context.fillStyle = "#fff";
+      context.fillRect(0, 0, 800, 600);
+      context.fill();
+    });
+  };
+});
