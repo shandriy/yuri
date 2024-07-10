@@ -52,10 +52,23 @@ addEventListener("DOMContentLoaded", function() {
     return keysDown.indexOf(key) > -1;
   }
   function keyCode(code) {
-    if (code > 64 && code < 91) {
-      return "Key" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[code - 65];
-    }
-  }
+    if (code > 64 && code < 91) return "Key" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[code - 65];
+    else if (code > 47 && code < 58) return "Digit" + (code - 48);
+    else switch (code) {
+      case 16:
+        return "ShiftLeft";
+      case 32:
+        return "Space";
+      case 37:
+        return "ArrowLeft";
+      case 38:
+        return "ArrowUp";
+      case 39:
+        return "ArrowRight";
+      case 40:
+        return "ArrowDown";
+    };
+  };
   addEventListener("keydown", function(event) {
     var key = keyCode(event.keyCode);
     if (keysDown.indexOf(key) === -1) keysDown.push(key);
@@ -67,7 +80,6 @@ addEventListener("DOMContentLoaded", function() {
   var mc = {
     x: 0,
     y: 0,
-    speed: 0.2
   }
   var animate = window.requestAnimationFrame || setTimeout;
   var previous = Date.now(), now, delta;
@@ -78,12 +90,19 @@ addEventListener("DOMContentLoaded", function() {
     context.fillStyle = "#fff";
     context.fillRect(0, 0, 800, 600);
     context.fillStyle = "#f00";
-    context.fillRect(mc.x, mc.y, 40, 80);
-    console.log(keysDown)
-    if (keyDown("KeyW") || keyDown("ArrowUp")) mc.y -= delta * mc.speed;
-    if (keyDown("KeyS") || keyDown("ArrowDown")) mc.y += delta * mc.speed;
-    if (keyDown("KeyA") || keyDown("ArrowLeft")) mc.x -= delta * mc.speed;
-    if (keyDown("KeyD") || keyDown("ArrowRight")) mc.x += delta * mc.speed;
+    var xMovement = 0, yMovement = 0;
+    var speed = keyDown("ShiftLeft") ? 0.5 : 0.2;
+    if (keyDown("KeyW") || keyDown("ArrowUp")) yMovement -= 1;
+    if (keyDown("KeyS") || keyDown("ArrowDown")) yMovement += 1;
+    if (keyDown("KeyA") || keyDown("ArrowLeft")) xMovement -= 1;
+    if (keyDown("KeyD") || keyDown("ArrowRight")) xMovement += 1;
+    if (xMovement !== 0 && yMovement !== 0) {
+      xMovement *= Math.SQRT1_2;
+      yMovement *= Math.SQRT1_2;
+    };
+    mc.x += xMovement * delta * speed;
+    mc.y += yMovement * delta * speed;
+    context.fillRect(Math.round(mc.x), Math.round(mc.y), 40, 80);
     animate(frame);
   };
 });
