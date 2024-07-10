@@ -41,7 +41,8 @@ addEventListener("DOMContentLoaded", function() {
     return out;
   };
   var pathArray = [
-    "temp.jpg"
+    "temp.jpg",
+    "placeholder.png"
   ];
   var leftToLoad = pathArray.length;
   var imageArray = loadImages("assets/images/", pathArray, function() {
@@ -83,6 +84,9 @@ addEventListener("DOMContentLoaded", function() {
   var mc = {
     x: 0,
     y: 0,
+    direction: 0,
+    walking: 0,
+    sprites: imageArray[1]
   }
   var animate = window.requestAnimationFrame || setTimeout;
   var now = window.performance ? performance.now ? function() {
@@ -128,6 +132,10 @@ addEventListener("DOMContentLoaded", function() {
     yMovement = Math.round(yMovement);
     mc.x += xMovement;
     mc.y += yMovement;
+    if (xMovement > 0) mc.direction = 1;
+    else if (xMovement < 0) mc.direction = 3;
+    if (yMovement > 0) mc.direction = 0;
+    else if (yMovement < 0) mc.direction = 2;
     function collides() {
       for (var i = 0; i < length; i += 1) {
         var horizontal = colliders[i][0][1] - colliders[i][1][1] === 0;
@@ -180,8 +188,9 @@ addEventListener("DOMContentLoaded", function() {
         while (collides()) mc.x += xMovement < 0 ? 1 : -1;
       };
     };
-    context.fillStyle = "#f00";
-    context.fillRect(mc.x - 20, mc.y - 80, 40, 80);
+    if (xMovement === 0 && yMovement === 0) mc.walking = 0;
+    else mc.walking = ((mc.walking + 1 + (delta * 0.003)) % 4) - 1;
+    context.drawImage(mc.sprites, Math.ceil(mc.walking) * 40, mc.direction * 80, 40, 80, mc.x - 20, mc.y - 80, 40, 80);
     context.fillStyle = "#00f";
     context.fillRect(mc.x - addedWidth, mc.y - COLLIDER_HEIGHT, COLLIDER_WIDTH, COLLIDER_HEIGHT);
     animate(frame);
