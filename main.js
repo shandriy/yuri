@@ -1,4 +1,7 @@
 addEventListener("DOMContentLoaded", function() {
+  var COLLIDER_WIDTH = 20;
+  var COLLIDER_HEIGHT = 15;
+  var addedWidth = COLLIDER_WIDTH / 2;
   var canvas = document.getElementsByTagName("canvas")[0];
   var context = canvas.getContext("2d", { alpha: false });
   canvas.width = 800;
@@ -131,13 +134,21 @@ addEventListener("DOMContentLoaded", function() {
         if (horizontal && yMovement !== 0) {
           var less = colliders[i][0][0] < colliders[i][1][0] ? colliders[i][0][0] : colliders[i][1][0];
           var more = colliders[i][0][0] > colliders[i][1][0] ? colliders[i][0][0] : colliders[i][1][0];
-          if (mc.x + 15 >= less && mc.x - 15 <= more && mc.y >= colliders[i][0][1] && mc.y - 15 <= colliders[i][0][1])
-            return true;
+          if (
+            mc.x + addedWidth >= less &&
+            mc.x - addedWidth <= more &&
+            mc.y >= colliders[i][0][1] &&
+            mc.y - COLLIDER_HEIGHT <= colliders[i][0][1]
+          ) return true;
         } else if (!horizontal && xMovement !== 0) {
           var less = colliders[i][0][1] < colliders[i][1][1] ? colliders[i][0][1] : colliders[i][1][1];
           var more = colliders[i][0][1] > colliders[i][1][1] ? colliders[i][0][1] : colliders[i][1][1];
-          if (mc.y >= less && mc.y - 15 <= more && mc.x + 15 >= colliders[i][0][0] && mc.x - 15 <= colliders[i][0][0])
-            return true;
+          if (
+            mc.y >= less &&
+            mc.y - COLLIDER_HEIGHT <= more &&
+            mc.x + addedWidth >= colliders[i][0][0] &&
+            mc.x - addedWidth <= colliders[i][0][0]
+          ) return true;
         };
       };
       return false;
@@ -172,7 +183,7 @@ addEventListener("DOMContentLoaded", function() {
     context.fillStyle = "#f00";
     context.fillRect(mc.x - 20, mc.y - 80, 40, 80);
     context.fillStyle = "#00f";
-    context.fillRect(mc.x - 15, mc.y - 15, 30, 15);
+    context.fillRect(mc.x - addedWidth, mc.y - COLLIDER_HEIGHT, COLLIDER_WIDTH, COLLIDER_HEIGHT);
     animate(frame);
   };
 });
