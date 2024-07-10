@@ -88,7 +88,11 @@ addEventListener("DOMContentLoaded", function() {
   var previous = Date.now(), now, delta;
   var colliders = [
     [[100, 200], [200, 200]],
-    [[200, 200], [200, 300]]
+    [[200, 200], [200, 300]],
+    [[200, 300], [180, 300]],
+    [[180, 300], [180, 220]],
+    [[180, 220], [100, 220]],
+    [[100, 220], [100, 200]]
   ];
   function frame() {
     now = Date.now()
@@ -119,27 +123,49 @@ addEventListener("DOMContentLoaded", function() {
     yMovement *= delta * speed;
     mc.x += xMovement;
     mc.y += yMovement;
-    var xCalc = Math.round(mc.x);
-    var yCalc = Math.round(mc.y);
-    for (var i = 0; i < length; i += 1) {
-      var horizontal = colliders[i][0][1] - colliders[i][1][1] === 0;
-      if (horizontal && yMovement !== 0) {
-        var less = colliders[i][0][0] < colliders[i][1][0] ? colliders[i][0][0] : colliders[i][1][0];
-        var more = colliders[i][0][0] > colliders[i][1][0] ? colliders[i][0][0] : colliders[i][1][0];
-        if (xCalc + 15 > less && xCalc - 15 < more && yCalc >= colliders[i][0][1] && yCalc - 15 <= colliders[i][0][1]) {
-          while (yCalc >= colliders[i][0][1] && yCalc - 15 <= colliders[i][0][1])
-            yCalc += yMovement < 0 ? 1 : -1;
-          mc.y = yCalc;
-        }
-      } else if (!horizontal && xMovement !== 0) {
-        var less = colliders[i][0][1] < colliders[i][1][1] ? colliders[i][0][1] : colliders[i][1][1];
-        var more = colliders[i][0][1] > colliders[i][1][1] ? colliders[i][0][1] : colliders[i][1][1];
-        if (yCalc > less && yCalc - 15 < more && xCalc + 15 >= colliders[i][0][0] && xCalc - 15 <= colliders[i][0][0]) {
-          while (xCalc + 15 >= colliders[i][0][0] && xCalc - 15 <= colliders[i][0][0])
-            xCalc += xMovement < 0 ? 1 : -1;
-          mc.x = xCalc;
-        }
-      }
+    function collides() {
+      for (var i = 0; i < length; i += 1) {
+        var horizontal = colliders[i][0][1] - colliders[i][1][1] === 0;
+        if (horizontal && yMovement !== 0) {
+          var less = colliders[i][0][0] < colliders[i][1][0] ? colliders[i][0][0] : colliders[i][1][0];
+          var more = colliders[i][0][0] > colliders[i][1][0] ? colliders[i][0][0] : colliders[i][1][0];
+          if (mc.x + 15 >= less && mc.x - 15 <= more && mc.y >= colliders[i][0][1] && mc.y - 15 <= colliders[i][0][1])
+            return true;
+        } else if (!horizontal && xMovement !== 0) {
+          var less = colliders[i][0][1] < colliders[i][1][1] ? colliders[i][0][1] : colliders[i][1][1];
+          var more = colliders[i][0][1] > colliders[i][1][1] ? colliders[i][0][1] : colliders[i][1][1];
+          if (mc.y >= less && mc.y - 15 <= more && mc.x + 15 >= colliders[i][0][0] && mc.x - 15 <= colliders[i][0][0])
+            return true;
+        };
+      };
+      return false;
+    };
+    if (collides()) {
+      mc.x -= xMovement;
+      if (collides()) {
+        mc.x += xMovement;
+        mc.y -= yMovement;
+        if (collides()) {
+          mc.x -= xMovement;
+          if (collides()) {
+            mc.x += xMovement;
+            mc.y += yMovement;
+          } else {
+            mc.x = Math.round(mc.x + xMovement);
+            mc.y = Math.round(mc.y + yMovement);
+            while (collides()) {
+              mc.x += xMovement < 0 ? 1 : -1;
+              mc.y += yMovement < 0 ? 1 : -1;
+            };
+          };
+        } else {
+          mc.y = Math.round(mc.y + yMovement);
+          while (collides()) mc.y += yMovement < 0 ? 1 : -1;
+        };
+      } else {
+        mc.x = Math.round(mc.x + xMovement);
+        while (collides()) mc.x += xMovement < 0 ? 1 : -1;
+      };
     };
     context.fillStyle = "#f00";
     context.fillRect(Math.round(mc.x) - 20, Math.round(mc.y) - 80, 40, 80);
