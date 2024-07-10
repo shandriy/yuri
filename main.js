@@ -82,6 +82,9 @@ addEventListener("DOMContentLoaded", function() {
     y: 0,
   }
   var animate = window.requestAnimationFrame || setTimeout;
+  var now = window.performance ? performance.now ? function() {
+    return performance.now()
+  } : Date.now : Date.now;
   var previous = Date.now(), now, delta;
   var colliders = [
     [[100, 200], [200, 200]],
