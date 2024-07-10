@@ -121,6 +121,8 @@ addEventListener("DOMContentLoaded", function() {
     };
     xMovement *= delta * speed;
     yMovement *= delta * speed;
+    xMovement = Math.round(xMovement);
+    yMovement = Math.round(yMovement);
     mc.x += xMovement;
     mc.y += yMovement;
     function collides() {
@@ -151,26 +153,26 @@ addEventListener("DOMContentLoaded", function() {
             mc.x += xMovement;
             mc.y += yMovement;
           } else {
-            mc.x = Math.round(mc.x + xMovement);
-            mc.y = Math.round(mc.y + yMovement);
+            mc.x += xMovement;
+            mc.y += yMovement;
             while (collides()) {
               mc.x += xMovement < 0 ? 1 : -1;
               mc.y += yMovement < 0 ? 1 : -1;
             };
           };
         } else {
-          mc.y = Math.round(mc.y + yMovement);
+          mc.y += yMovement;
           while (collides()) mc.y += yMovement < 0 ? 1 : -1;
         };
       } else {
-        mc.x = Math.round(mc.x + xMovement);
+        mc.x += xMovement;
         while (collides()) mc.x += xMovement < 0 ? 1 : -1;
       };
     };
     context.fillStyle = "#f00";
-    context.fillRect(Math.round(mc.x) - 20, Math.round(mc.y) - 80, 40, 80);
+    context.fillRect(mc.x - 20, mc.y - 80, 40, 80);
     context.fillStyle = "#00f";
-    context.fillRect(Math.round(mc.x) - 15, Math.round(mc.y) - 15, 30, 15);
+    context.fillRect(mc.x - 15, mc.y - 15, 30, 15);
     animate(frame);
   };
 });
