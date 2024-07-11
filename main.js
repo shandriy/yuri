@@ -89,7 +89,7 @@ addEventListener("DOMContentLoaded", function() {
     sprites: imageArray[1]
   }
   var animate = window.requestAnimationFrame || setTimeout;
-  var now = window.performance ? performance.now ? function() {
+  var getNow = window.performance ? performance.now ? function() {
     return performance.now()
   } : Date.now : Date.now;
   var previous = Date.now(), now, delta;
@@ -102,7 +102,7 @@ addEventListener("DOMContentLoaded", function() {
     [[100, 220], [100, 200]]
   ];
   function frame() {
-    now = Date.now()
+    now = getNow()
     delta = now - previous;
     previous = now;
     context.fillStyle = "#fff";
