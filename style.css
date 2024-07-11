@@ -15,15 +15,3 @@ canvas {
   image-rendering: -moz-crisp-edges;
   image-rendering: -webkit-optimize-contrast;
 }
-div {
-  position: absolute;
-  width: 90%;
-  height: 40%;
-  background-color: #000;
-  border-color: #fff;
-  border-style: solid;
-  border-width: 2px;
-  left: 5%;
-  bottom: 5%;
-  display: none;
-}
