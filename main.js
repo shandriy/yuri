@@ -42,7 +42,7 @@ addEventListener("DOMContentLoaded", function() {
   };
   var pathArray = [
     "temp.jpg",
-    "placeholder.png"
+    "bok-su.png"
   ];
   var leftToLoad = pathArray.length;
   var imageArray = loadImages("assets/images/", pathArray, function() {
@@ -117,7 +117,7 @@ addEventListener("DOMContentLoaded", function() {
     };
     context.stroke();
     var xMovement = 0, yMovement = 0;
-    var speed = keyDown("ShiftLeft") ? 0.5 : 0.2;
+    var speed = keyDown("ShiftLeft") ? 0.5 : 0.25;
     if (keyDown("KeyW") || keyDown("ArrowUp")) yMovement -= 1;
     if (keyDown("KeyS") || keyDown("ArrowDown")) yMovement += 1;
     if (keyDown("KeyA") || keyDown("ArrowLeft")) xMovement -= 1;
@@ -132,10 +132,10 @@ addEventListener("DOMContentLoaded", function() {
     yMovement = Math.round(yMovement);
     mc.x += xMovement;
     mc.y += yMovement;
-    if (xMovement > 0) mc.direction = 1;
-    else if (xMovement < 0) mc.direction = 3;
+    if (xMovement > 0) mc.direction = 2;
+    else if (xMovement < 0) mc.direction = 1;
     if (yMovement > 0) mc.direction = 0;
-    else if (yMovement < 0) mc.direction = 2;
+    else if (yMovement < 0) mc.direction = 3;
     function collides() {
       for (var i = 0; i < length; i += 1) {
         var horizontal = colliders[i][0][1] - colliders[i][1][1] === 0;
@@ -188,11 +188,9 @@ addEventListener("DOMContentLoaded", function() {
         while (collides()) mc.x += xMovement < 0 ? 1 : -1;
       };
     };
-    if (xMovement === 0 && yMovement === 0) mc.walking = 0;
-    else mc.walking = ((mc.walking + 1 + (delta * 0.003)) % 4) - 1;
-    context.drawImage(mc.sprites, Math.ceil(mc.walking) * 40, mc.direction * 80, 40, 80, mc.x - 20, mc.y - 80, 40, 80);
-    context.fillStyle = "#00f";
-    context.fillRect(mc.x - addedWidth, mc.y - COLLIDER_HEIGHT, COLLIDER_WIDTH, COLLIDER_HEIGHT);
+    if (xMovement === 0 && yMovement === 0) mc.walking = 1;
+    else mc.walking = ((mc.walking + 1 + (delta * 0.006)) % 5) - 1;
+    context.drawImage(mc.sprites, Math.ceil(mc.walking) * 77, mc.direction * 161, 77, 161, mc.x - 40, mc.y - 160, 80, 160);
     animate(frame);
   };
 });
