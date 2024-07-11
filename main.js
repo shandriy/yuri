@@ -101,8 +101,9 @@ addEventListener("DOMContentLoaded", function() {
     [[180, 220], [100, 220]],
     [[100, 220], [100, 200]]
   ];
+  var lastX = mc.x, lastY = mc.y;
   function frame() {
-    now = getNow()
+    now = getNow();
     delta = now - previous;
     previous = now;
     context.fillStyle = "#fff";
@@ -132,10 +133,6 @@ addEventListener("DOMContentLoaded", function() {
     yMovement = Math.round(yMovement);
     mc.x += xMovement;
     mc.y += yMovement;
-    if (xMovement > 0) mc.direction = 2;
-    else if (xMovement < 0) mc.direction = 1;
-    if (yMovement > 0) mc.direction = 0;
-    else if (yMovement < 0) mc.direction = 3;
     function collides() {
       for (var i = 0; i < length; i += 1) {
         var horizontal = colliders[i][0][1] - colliders[i][1][1] === 0;
@@ -188,7 +185,22 @@ addEventListener("DOMContentLoaded", function() {
         while (collides()) mc.x += xMovement < 0 ? 1 : -1;
       };
     };
-    if (xMovement === 0 && yMovement === 0) mc.walking = 1;
+    var xChange = mc.x - lastX;
+    var yChange = mc.y - lastY;
+    lastX = mc.x;
+    lastY = mc.y;
+    if (xChange === 0 && yChange === 0) {
+      if (xMovement > 0) mc.direction = 2;
+      else if (xMovement < 0) mc.direction = 1;
+      if (yMovement > 0) mc.direction = 0;
+      else if (yMovement < 0) mc.direction = 3;
+    } else {
+      if (xChange > 0) mc.direction = 2;
+      else if (xChange < 0) mc.direction = 1;
+      if (yChange > 0) mc.direction = 0;
+      else if (yChange < 0) mc.direction = 3;
+    }
+    if (xChange === 0 && yChange === 0) mc.walking = 1;
     else mc.walking = ((mc.walking + 1 + (delta * 0.006)) % 5) - 1;
     context.drawImage(mc.sprites, Math.ceil(mc.walking) * 77, mc.direction * 161, 77, 161, mc.x - 40, mc.y - 160, 80, 160);
     animate(frame);
