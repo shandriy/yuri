@@ -6,6 +6,12 @@ addEventListener("DOMContentLoaded", function() {
   var context = canvas.getContext("2d", { alpha: false });
   canvas.width = 800;
   canvas.height = 600;
+  var dialogue = false;
+  var canvasText = !!context.fillText, lastDialogue = dialogue, dialogueDiv;
+  if (!canvasText) {
+    dialogueDiv = document.createElement("div");
+    document.body.appendChild(dialogueDiv);
+  };
   function resize() {
     var outWidth, outHeight, top, left;
     if (innerWidth * 3 > innerHeight * 4) {
@@ -23,6 +29,12 @@ addEventListener("DOMContentLoaded", function() {
     canvas.style.left = left + "px";
     canvas.style.width = outWidth + "px";
     canvas.style.height = outHeight + "px";
+    if (!canvasText) {
+      var multiplier = outWidth / 800;
+      dialogueDiv.style.top = (top + (384 * multiplier)) + "px";
+      dialogueDiv.style.left = (left + (40 * multiplier)) + "px";
+      dialogueDiv.style.fontSize = (25 * multiplier) + "px";
+    };
   };
   resize();
   addEventListener("resize", resize);
@@ -88,7 +100,6 @@ addEventListener("DOMContentLoaded", function() {
     walking: 0,
     sprites: imageArray[1]
   };
-  var dialogue = false;
   var animate = window.requestAnimationFrame || setTimeout;
   var getNow = window.performance ? performance.now ? function() {
     return performance.now()
@@ -206,17 +217,27 @@ addEventListener("DOMContentLoaded", function() {
     context.drawImage(mc.sprites, Math.ceil(mc.walking) * 77, mc.direction * 161, 77, 161, mc.x - 40, mc.y - 160, 80, 160);
     dialogue = keyDown("KeyT");
     if (dialogue) {
+      var lines = ["\"Hello World!\"", "... lines of text"];
+      var length = lines.length;
       context.fillStyle = "#000";
       context.fillRect(10, 360, 780, 230);
       context.lineWidth = 3;
       context.strokeStyle = "#fff";
       context.strokeRect(20, 370, 760, 210);
-      context.fillStyle = "#fff";
-      context.font = "25px 'Times New Roman'";
-      var lines = ["\"Hello World!\"", "... lines of text"];
-      for (var i = 0; i < lines.length; i += 1)
-        context.fillText(lines[i], 40, 407 + (i * 30));
+      if (canvasText) {
+        context.fillStyle = "#fff";
+        context.font = "25px 'Times New Roman'";
+        for (var i = 0; i < length; i += 1)
+          context.fillText(lines[i], 40, 407 + (i * 30));
+      } else if (!lastDialogue) {
+        dialogueDiv.innerHTML = "";
+        for (var i = 0; i < length; i += 1)
+          dialogueDiv.innerHTML += "<p>" + lines[i] + "</p>";
+      };
+    } else if (lastDialogue && !canvasText) {
+      dialogueDiv.innerHTML = "";
     };
+    lastDialogue = dialogue;
     animate(frame);
   };
 });

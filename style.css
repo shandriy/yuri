@@ -3,7 +3,7 @@ html, body {
   height: 100%;
   background-color: #000;
 }
-html, body, canvas {
+html, body, canvas, div {
   margin: 0px 0px 0px 0px;
   padding: 0px 0px 0px 0px;
   overflow: hidden;
@@ -14,4 +14,13 @@ canvas {
   image-rendering: crisp-edges;
   image-rendering: -moz-crisp-edges;
   image-rendering: -webkit-optimize-contrast;
+}
+div {
+  color: #fff;
+  position: absolute;
+}
+p {
+  color: #fff;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
 }
