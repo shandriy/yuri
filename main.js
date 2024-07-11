@@ -127,6 +127,12 @@ addEventListener("DOMContentLoaded", function() {
       xMovement *= Math.SQRT1_2;
       yMovement *= Math.SQRT1_2;
     };
+    var dialogue = document.getElementsByTagName("div")[0];
+    if (keyDown("Space")) {
+      dialogue.style.display = "inherit";
+    } else {
+      dialogue.style.display = "none";
+    }
     xMovement *= delta * speed;
     yMovement *= delta * speed;
     xMovement = Math.round(xMovement);
