@@ -87,7 +87,8 @@ addEventListener("DOMContentLoaded", function() {
     direction: 0,
     walking: 0,
     sprites: imageArray[1]
-  }
+  };
+  var dialogue = false;
   var animate = window.requestAnimationFrame || setTimeout;
   var getNow = window.performance ? performance.now ? function() {
     return performance.now()
@@ -203,14 +204,19 @@ addEventListener("DOMContentLoaded", function() {
     if (xChange === 0 && yChange === 0) mc.walking = 1;
     else mc.walking = ((mc.walking + 1 + (delta * 0.006)) % 5) - 1;
     context.drawImage(mc.sprites, Math.ceil(mc.walking) * 77, mc.direction * 161, 77, 161, mc.x - 40, mc.y - 160, 80, 160);
-    context.fillStyle = "#000";
-    context.fillRect(10, 360, 780, 230);
-    context.lineWidth = 3;
-    context.strokeStyle = "#fff";
-    context.strokeRect(20, 370, 760, 210);
-    context.fillStyle = "#fff";
-    context.font = "25px 'Times New Roman'";
-    context.fillText('"Hello world"', 40, 407);
+    dialogue = keyDown("KeyT");
+    if (dialogue) {
+      context.fillStyle = "#000";
+      context.fillRect(10, 360, 780, 230);
+      context.lineWidth = 3;
+      context.strokeStyle = "#fff";
+      context.strokeRect(20, 370, 760, 210);
+      context.fillStyle = "#fff";
+      context.font = "25px 'Times New Roman'";
+      var lines = ["\"Hello World!\"", "... lines of text"];
+      for (var i = 0; i < lines.length; i += 1)
+        context.fillText(lines[i], 40, 407 + (i * 30));
+    };
     animate(frame);
   };
 });
