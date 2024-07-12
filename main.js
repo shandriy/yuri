@@ -98,13 +98,15 @@ addEventListener("DOMContentLoaded", function() {
     y: 0,
     direction: 0,
     walking: 0,
+    standingFor: 0,
+    walkingFor: 0,
     sprites: imageArray[1]
   };
   var animate = window.requestAnimationFrame || setTimeout;
   var getNow = window.performance ? performance.now ? function() {
     return performance.now()
   } : Date.now : Date.now;
-  var previous = Date.now(), now, delta;
+  var previous = getNow(), now, delta;
   var colliders = [
     [[100, 200], [200, 200]],
     [[200, 200], [200, 300]],
@@ -201,19 +203,31 @@ addEventListener("DOMContentLoaded", function() {
     var yChange = mc.y - lastY;
     lastX = mc.x;
     lastY = mc.y;
+    var directionX, directionY;
     if (xChange === 0 && yChange === 0) {
-      if (xMovement > 0) mc.direction = 2;
-      else if (xMovement < 0) mc.direction = 1;
-      if (yMovement > 0) mc.direction = 0;
-      else if (yMovement < 0) mc.direction = 3;
+      directionX = xMovement;
+      directionY = yMovement;
     } else {
-      if (xChange > 0) mc.direction = 2;
-      else if (xChange < 0) mc.direction = 1;
-      if (yChange > 0) mc.direction = 0;
-      else if (yChange < 0) mc.direction = 3;
-    }
-    if (xChange === 0 && yChange === 0) mc.walking = 1;
-    else mc.walking = ((mc.walking + 1 + (delta * 0.006)) % 5) - 1;
+      directionX = xChange;
+      directionY = yChange;
+    };
+    if (directionX > 0) mc.direction = 2;
+    else if (directionX < 0) mc.direction = 1;
+    if (directionY > 0) mc.direction = 0;
+    else if (directionY < 0) mc.direction = 3;
+    if (xChange === 0 && yChange === 0) {
+      mc.walkingFor = 0;
+      mc.standingFor += delta;
+      if (mc.standingFor > 100)
+        mc.walking = 1;
+      else
+        mc.walking = ((mc.walking + 1 + (delta * 0.002)) % 5) - 1;
+    } else {
+      mc.standingFor = 0;
+      mc.walkingFor += delta;
+      if (mc.walkingFor > 50)
+        mc.walking = ((mc.walking + 1 + (delta * 0.006)) % 5) - 1;
+    };
     context.drawImage(mc.sprites, Math.ceil(mc.walking) * 77, mc.direction * 161, 77, 161, mc.x - 40, mc.y - 160, 80, 160);
     dialogue = keyDown("KeyT");
     if (dialogue) {
