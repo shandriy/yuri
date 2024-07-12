@@ -54,7 +54,7 @@ addEventListener("DOMContentLoaded", function() {
   };
   var pathArray = [
     "temp.jpg",
-    "bok-su.png"
+    "mc_walk_front.png"
   ];
   var leftToLoad = pathArray.length;
   var imageArray = loadImages("assets/images/", pathArray, function() {
@@ -222,16 +222,16 @@ addEventListener("DOMContentLoaded", function() {
       mc.walkingFor = 0;
       mc.standingFor += delta;
       if (mc.standingFor > 100)
-        mc.walking = 1;
+        mc.walking = 0;
       else
-        mc.walking = ((mc.walking + 1 + (delta * 0.002)) % 5) - 1;
+        mc.walking = ((mc.walking + (delta * 0.002)) % 4);
     } else {
       mc.standingFor = 0;
       mc.walkingFor += delta;
       if (mc.walkingFor > 50)
-        mc.walking = ((mc.walking + 1 + (delta * 0.006)) % 5) - 1;
+        mc.walking = ((mc.walking + (delta * 0.006)) % 4);
     };
-    context.drawImage(mc.sprites, Math.ceil(mc.walking) * 77, mc.direction * 161, 77, 161, mc.x - 40, mc.y - 160, 80, 160);
+    context.drawImage(mc.sprites, Math.ceil(mc.walking) * 80, mc.direction * 160, 80, 160, mc.x - 40, mc.y - 160, 80, 160);
     dialogue = keyDown("KeyT");
     if (dialogue) {
       var lines = ["\"Hello World!\"", "... lines of text"];
