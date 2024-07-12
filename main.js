@@ -1,6 +1,6 @@
 addEventListener("DOMContentLoaded", function() {
-  var COLLIDER_WIDTH = 20;
-  var COLLIDER_HEIGHT = 15;
+  var COLLIDER_WIDTH = 30;
+  var COLLIDER_HEIGHT = 22;
   var addedWidth = COLLIDER_WIDTH / 2;
   var canvas = document.getElementsByTagName("canvas")[0];
   var context = canvas.getContext("2d", { alpha: false });
