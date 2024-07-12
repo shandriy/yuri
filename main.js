@@ -54,7 +54,7 @@ addEventListener("DOMContentLoaded", function() {
   };
   var pathArray = [
     "temp.jpg",
-    "mc_walk_front.png"
+    "mc_walk.png"
   ];
   var leftToLoad = pathArray.length;
   var imageArray = loadImages("assets/images/", pathArray, function() {
@@ -215,9 +215,9 @@ addEventListener("DOMContentLoaded", function() {
       directionY = yChange;
     };
     if (directionX > 0) mc.direction = 2;
-    else if (directionX < 0) mc.direction = 1;
+    else if (directionX < 0) mc.direction = 3;
     if (directionY > 0) mc.direction = 0;
-    else if (directionY < 0) mc.direction = 3;
+    else if (directionY < 0) mc.direction = 1;
     if (xChange === 0 && yChange === 0) {
       mc.walkingFor = 0;
       mc.standingFor += delta;
