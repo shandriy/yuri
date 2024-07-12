@@ -93,6 +93,9 @@ addEventListener("DOMContentLoaded", function() {
     var index = keysDown.indexOf(keyCode(event.keyCode));
     if (index > -1) keysDown.splice(index, 1);
   });
+  addEventListener("blur", function() {
+    keysDown = [];
+  });
   var mc = {
     x: 0,
     y: 0,
