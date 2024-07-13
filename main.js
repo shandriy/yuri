@@ -137,8 +137,6 @@ addEventListener("DOMContentLoaded", function() {
     context.stroke();
     var xMovement = 0, yMovement = 0;
     var speed = 0.25;
-    if (mc.walkingFor < 100)
-      speed *= (mc.walkingFor / 125) + 0.2;
     if (roomLoading <= 0) {
       if (keyDown("KeyW") || keyDown("ArrowUp")) yMovement -= 1;
       if (keyDown("KeyS") || keyDown("ArrowDown")) yMovement += 1;
