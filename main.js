@@ -118,6 +118,7 @@ addEventListener("DOMContentLoaded", function() {
     [[180, 220], [100, 220]],
     [[100, 220], [100, 200]]
   ];
+  var roomLoading = 0;
   var lastX = mc.x, lastY = mc.y;
   function frame() {
     now = getNow();
@@ -138,10 +139,12 @@ addEventListener("DOMContentLoaded", function() {
     var speed = 0.25;
     if (mc.walkingFor < 100)
       speed *= (mc.walkingFor / 125) + 0.2;
-    if (keyDown("KeyW") || keyDown("ArrowUp")) yMovement -= 1;
-    if (keyDown("KeyS") || keyDown("ArrowDown")) yMovement += 1;
-    if (keyDown("KeyA") || keyDown("ArrowLeft")) xMovement -= 1;
-    if (keyDown("KeyD") || keyDown("ArrowRight")) xMovement += 1;
+    if (roomLoading <= 0) {
+      if (keyDown("KeyW") || keyDown("ArrowUp")) yMovement -= 1;
+      if (keyDown("KeyS") || keyDown("ArrowDown")) yMovement += 1;
+      if (keyDown("KeyA") || keyDown("ArrowLeft")) xMovement -= 1;
+      if (keyDown("KeyD") || keyDown("ArrowRight")) xMovement += 1;
+    };
     if (xMovement !== 0 && yMovement !== 0) {
       xMovement *= Math.SQRT1_2;
       yMovement *= Math.SQRT1_2;
@@ -233,6 +236,16 @@ addEventListener("DOMContentLoaded", function() {
       if (mc.walkingFor > 50)
         mc.walking = ((mc.walking + (delta * 0.006)) % 4);
     };
+    if (mc.x > 800 || mc.x < 0) {
+      if (mc.x > 800) mc.x = 0
+      else mc.x = 800;
+      roomLoading = 100;
+    };
+    if (mc.y > 600 || mc.y < 0) {
+      if (mc.y > 600) mc.y = 0
+      else mc.y = 600;
+      roomLoading = 100;
+    };
     context.drawImage(mc.sprites, Math.ceil(mc.walking) * 80, mc.direction * 160, 80, 160, mc.x - 40, mc.y - 160, 80, 160);
     dialogue = keyDown("KeyT");
     if (dialogue) {
@@ -257,6 +270,11 @@ addEventListener("DOMContentLoaded", function() {
       dialogueDiv.innerHTML = "";
     };
     lastDialogue = dialogue;
+    if (roomLoading > 0) {
+      roomLoading -= delta / 5;
+      context.fillStyle = "#000";
+      context.fillRect(0, 0, 800, 600);
+    };
     animate(frame);
   };
 });
