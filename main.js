@@ -66,6 +66,7 @@ addEventListener("DOMContentLoaded", function() {
       });
     };
   });
+  var scriptsLoaded = [];
   var mc = {
     x: 0,
     y: 0,
@@ -78,14 +79,31 @@ addEventListener("DOMContentLoaded", function() {
     sprites: imageArray[1]
   };
   function loadRoom(onload) {
-    var script = document.createElement("script");
-    script.addEventListener("load", onload);
-    script.addEventListener("load", function() {
+    var source = "stage/" + mc.roomX + "." + mc.roomY + ".js";
+    var functionName =
+      "x" +
+      mc.roomX.toString().replace("-", "_") +
+      "y" +
+      mc.roomY.toString().replace("-", "_");
+    if (scriptsLoaded.indexOf(source) === -1) {
+      scriptsLoaded.push(source)
+      var script = document.createElement("script");
+      script.addEventListener("load", function() {
+        window[functionName]();
+        roomLoading = 0;
+        mc.direction = cacheDirection;
+        if (onload)
+          onload();
+      });
+      script.src = source;
+      document.getElementsByTagName("head")[0].appendChild(script);
+    } else {
+      window[functionName]();
       roomLoading = 0;
       mc.direction = cacheDirection;
-    });
-    script.src = "stage/" + mc.roomX + "." + mc.roomY + ".js";
-    document.getElementsByTagName("head")[0].appendChild(script);
+      if (onload)
+        onload();
+    }
   };
   var keysDown = [];
   function keyDown(key) {
