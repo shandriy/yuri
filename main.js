@@ -1,3 +1,4 @@
+var colliders;
 addEventListener("DOMContentLoaded", function() {
   var COLLIDER_WIDTH = 30;
   var COLLIDER_HEIGHT = 22;
@@ -60,9 +61,32 @@ addEventListener("DOMContentLoaded", function() {
   var imageArray = loadImages("assets/images/", pathArray, function() {
     leftToLoad -= 1;
     if (leftToLoad < 1) {
-      frame();
+      loadRoom(function() {
+        frame();
+      });
     };
   });
+  var mc = {
+    x: 0,
+    y: 0,
+    roomX: 0,
+    roomY: 0,
+    direction: 0,
+    walking: 0,
+    standingFor: 0,
+    walkingFor: 0,
+    sprites: imageArray[1]
+  };
+  function loadRoom(onload) {
+    var script = document.createElement("script");
+    script.addEventListener("load", onload);
+    script.addEventListener("load", function() {
+      roomLoading = 0;
+      mc.direction = cacheDirection;
+    });
+    script.src = "stage/" + mc.roomX + "." + mc.roomY + ".js";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  };
   var keysDown = [];
   function keyDown(key) {
     return keysDown.indexOf(key) > -1;
@@ -96,29 +120,12 @@ addEventListener("DOMContentLoaded", function() {
   addEventListener("blur", function() {
     keysDown = [];
   });
-  var mc = {
-    x: 0,
-    y: 0,
-    direction: 0,
-    walking: 0,
-    standingFor: 0,
-    walkingFor: 0,
-    sprites: imageArray[1]
-  };
   var animate = window.requestAnimationFrame || setTimeout;
   var getNow = window.performance ? performance.now ? function() {
     return performance.now()
   } : Date.now : Date.now;
   var previous = getNow(), now, delta;
-  var colliders = [
-    [[100, 200], [200, 200]],
-    [[200, 200], [200, 300]],
-    [[200, 300], [180, 300]],
-    [[180, 300], [180, 220]],
-    [[180, 220], [100, 220]],
-    [[100, 220], [100, 200]]
-  ];
-  var roomLoading = 0, cacheDirection;
+  var roomLoading = 100, cacheDirection = 0;
   var lastX = mc.x, lastY = mc.y;
   function frame() {
     now = getNow();
@@ -271,8 +278,6 @@ addEventListener("DOMContentLoaded", function() {
     };
     lastDialogue = dialogue;
     if (roomLoading > 0) {
-      roomLoading -= delta / 5;
-      if (roomLoading <= 0) mc.direction = cacheDirection;
       context.fillStyle = "#000";
       context.fillRect(0, 0, 800, 600);
     };
