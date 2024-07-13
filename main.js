@@ -118,7 +118,7 @@ addEventListener("DOMContentLoaded", function() {
     [[180, 220], [100, 220]],
     [[100, 220], [100, 200]]
   ];
-  var roomLoading = 0;
+  var roomLoading = 0, cacheDirection;
   var lastX = mc.x, lastY = mc.y;
   function frame() {
     now = getNow();
@@ -238,11 +238,13 @@ addEventListener("DOMContentLoaded", function() {
       if (mc.x > 800) mc.x = 0
       else mc.x = 800;
       roomLoading = 100;
+      cacheDirection = mc.direction;
     };
     if (mc.y > 600 || mc.y < 0) {
       if (mc.y > 600) mc.y = 0
       else mc.y = 600;
       roomLoading = 100;
+      cacheDirection = mc.direction;
     };
     context.drawImage(mc.sprites, Math.ceil(mc.walking) * 80, mc.direction * 160, 80, 160, mc.x - 40, mc.y - 160, 80, 160);
     dialogue = keyDown("KeyT");
@@ -270,6 +272,7 @@ addEventListener("DOMContentLoaded", function() {
     lastDialogue = dialogue;
     if (roomLoading > 0) {
       roomLoading -= delta / 5;
+      if (roomLoading <= 0) mc.direction = cacheDirection;
       context.fillStyle = "#000";
       context.fillRect(0, 0, 800, 600);
     };
