@@ -242,16 +242,28 @@ addEventListener("DOMContentLoaded", function() {
         mc.walking = ((mc.walking + (delta * 0.006)) % 4);
     };
     if (mc.x > 800 || mc.x < 0) {
-      if (mc.x > 800) mc.x = 0
-      else mc.x = 800;
+      if (mc.x > 800) {
+        mc.x = 0;
+        mc.roomX += 1;
+      } else {
+        mc.x = 800;
+        mc.roomX -= 1;
+      };
       roomLoading = 100;
       cacheDirection = mc.direction;
+      loadRoom();
     };
     if (mc.y > 600 || mc.y < 0) {
-      if (mc.y > 600) mc.y = 0
-      else mc.y = 600;
+      if (mc.y > 600) {
+        mc.y = 0;
+        mc.roomY += 1;
+      } else {
+        mc.y = 600;
+        mc.roomY -= 1;
+      };
       roomLoading = 100;
       cacheDirection = mc.direction;
+      loadRoom();
     };
     context.drawImage(mc.sprites, Math.ceil(mc.walking) * 80, mc.direction * 160, 80, 160, mc.x - 40, mc.y - 160, 80, 160);
     dialogue = keyDown("KeyT");
