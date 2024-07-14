@@ -85,25 +85,25 @@ addEventListener("DOMContentLoaded", function() {
       mc.roomX.toString().replace("-", "_") +
       "y" +
       mc.roomY.toString().replace("-", "_");
+    function whenLoaded() {
+      window[functionName]();
+      roomLoading = 0;
+      lastX = mc.x;
+      lastY = mc.y;
+      if (onload)
+        onload();
+    };
     if (scriptsLoaded.indexOf(source) === -1) {
       scriptsLoaded.push(source)
       var script = document.createElement("script");
       script.addEventListener("load", function() {
-        window[functionName]();
-        roomLoading = 0;
-        mc.direction = cacheDirection;
-        if (onload)
-          onload();
+        whenLoaded();
       });
       script.src = source;
       document.getElementsByTagName("head")[0].appendChild(script);
     } else {
-      window[functionName]();
-      roomLoading = 0;
-      mc.direction = cacheDirection;
-      if (onload)
-        onload();
-    }
+      whenLoaded();
+    };
   };
   var keysDown = [];
   function keyDown(key) {
@@ -143,7 +143,7 @@ addEventListener("DOMContentLoaded", function() {
     return performance.now()
   } : Date.now : Date.now;
   var previous = getNow(), now, delta;
-  var roomLoading = 100, cacheDirection = 0;
+  var roomLoading = 100;
   var lastX = mc.x, lastY = mc.y;
   function frame() {
     now = getNow();
@@ -242,10 +242,12 @@ addEventListener("DOMContentLoaded", function() {
       directionX = xChange;
       directionY = yChange;
     };
-    if (directionX > 0) mc.direction = 2;
-    else if (directionX < 0) mc.direction = 3;
-    if (directionY > 0) mc.direction = 0;
-    else if (directionY < 0) mc.direction = 1;
+    if (roomLoading <= 0) {
+      if (directionX > 0) mc.direction = 2;
+      else if (directionX < 0) mc.direction = 3;
+      if (directionY > 0) mc.direction = 0;
+      else if (directionY < 0) mc.direction = 1;
+    };
     if (xChange === 0 && yChange === 0) {
       mc.walkingFor = 0;
       mc.standingFor += delta;
@@ -259,28 +261,26 @@ addEventListener("DOMContentLoaded", function() {
       if (mc.walkingFor > 50)
         mc.walking = ((mc.walking + (delta * 0.006)) % 4);
     };
-    if (mc.x > 800 || mc.x < 0) {
-      if (mc.x > 800) {
-        mc.x = 0;
+    if (mc.x > 840 || mc.x < -40) {
+      if (mc.x > 840) {
+        mc.x = 40;
         mc.roomX += 1;
       } else {
-        mc.x = 800;
+        mc.x = 760;
         mc.roomX -= 1;
       };
       roomLoading = 100;
-      cacheDirection = mc.direction;
       loadRoom();
     };
-    if (mc.y > 600 || mc.y < 0) {
-      if (mc.y > 600) {
+    if (mc.y > 760 || mc.y < 0) {
+      if (mc.y > 760) {
         mc.y = 0;
         mc.roomY += 1;
       } else {
-        mc.y = 600;
+        mc.y = 440;
         mc.roomY -= 1;
       };
       roomLoading = 100;
-      cacheDirection = mc.direction;
       loadRoom();
     };
     context.drawImage(mc.sprites, Math.ceil(mc.walking) * 80, mc.direction * 160, 80, 160, mc.x - 40, mc.y - 160, 80, 160);
