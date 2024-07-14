@@ -128,11 +128,12 @@ addEventListener("DOMContentLoaded", function() {
     };
   };
   addEventListener("keydown", function(event) {
-    var key = keyCode(event.keyCode);
+    var key = event.code ? event.code : keyCode(event.keyCode);
+    console.log(key);
     if (keysDown.indexOf(key) === -1) keysDown.push(key);
   });
   addEventListener("keyup", function(event) {
-    var index = keysDown.indexOf(keyCode(event.keyCode));
+    var index = keysDown.indexOf(event.code ? event.code : keyCode(event.keyCode));
     if (index > -1) keysDown.splice(index, 1);
   });
   addEventListener("blur", function() {
