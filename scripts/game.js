@@ -7,6 +7,8 @@ function game() {
     y: 80,
     frame: 0,
     direction: 0,
+    standing: true,
+    stateFor: 0,
     temp: {
       x: 0,
       y: 0
@@ -15,6 +17,7 @@ function game() {
   yuri.frame(function(delta) {
     var frame = 0;
     var speed = 0.25;
+    mcObject.stateFor += delta;
     yuri.props.context.fillStyle = "#fff";
     yuri.props.context.fillRect(0, 0, 800, 600);
     var keyUpPressed = yuri.keyboard.isDown("KeyW") || yuri.keyboard.isDown("ArrowUp");
@@ -30,8 +33,16 @@ function game() {
     if (mcObject.temp.y < 0) mcObject.direction = 1;
     if (mcObject.temp.y > 0) mcObject.direction = 0;
     if (mcObject.temp.x !== 0 && mcObject.temp.y !== 0) speed *= Math.SQRT1_2;
-    if (mcObject.temp.x !== 0 || mcObject.temp.y !== 0) mcObject.frame += delta * 0.006;
-    else mcObject.frame = 0;
+    if (mcObject.temp.x !== 0 || mcObject.temp.y !== 0) {
+      if (mcObject.standing) mcObject.stateFor = mcObject.stateFor > 100 ? 51 : 0;
+      else if (mcObject.stateFor > 50) mcObject.frame += delta * 0.006;
+      mcObject.standing = false;
+    } else {
+      if (!mcObject.standing) mcObject.stateFor = 0;
+      else if (mcObject.stateFor > 100) mcObject.frame = 0;
+      else mcObject.frame += delta * 0.002;
+      mcObject.standing = true;
+    };
     mcObject.x += mcObject.temp.x * speed;
     mcObject.y += mcObject.temp.y * speed;
     mcObject.temp.x = 0;
