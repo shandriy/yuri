@@ -9,6 +9,7 @@ function game() {
     direction: 0,
     standing: true,
     stateFor: 101,
+    movementLocked: false,
     temp: {
       x: 0,
       y: 0
@@ -19,23 +20,20 @@ function game() {
     }
   };
   yuri.frame(function(delta) {
-    if (scene.loading) {
-      mcEntity.shown = false;
-      yuri.props.context.fillStyle = "#000";
-      yuri.props.context.fillRect(0, 0, 800, 600);
-      return;
-    } else mcEntity.shown = true;
     var frame = 0;
     var speed = 0.25;
     mcObject.temp.x = 0;
     mcObject.temp.y = 0;
     mcObject.stateFor += delta;
+    movementLocked = scene.loading;
     yuri.props.context.fillStyle = "#fff";
     yuri.props.context.fillRect(0, 0, 800, 600);
-    if (yuri.keyboard.isDown("KeyW") || yuri.keyboard.isDown("ArrowUp")) mcObject.temp.y -= delta;
-    if (yuri.keyboard.isDown("KeyA") || yuri.keyboard.isDown("ArrowLeft")) mcObject.temp.x -= delta;
-    if (yuri.keyboard.isDown("KeyS") || yuri.keyboard.isDown("ArrowDown")) mcObject.temp.y += delta;
-    if (yuri.keyboard.isDown("KeyD") || yuri.keyboard.isDown("ArrowRight")) mcObject.temp.x += delta;
+    if (!movementLocked) {
+      if (yuri.keyboard.isDown("KeyW") || yuri.keyboard.isDown("ArrowUp")) mcObject.temp.y -= delta;
+      if (yuri.keyboard.isDown("KeyA") || yuri.keyboard.isDown("ArrowLeft")) mcObject.temp.x -= delta;
+      if (yuri.keyboard.isDown("KeyS") || yuri.keyboard.isDown("ArrowDown")) mcObject.temp.y += delta;
+      if (yuri.keyboard.isDown("KeyD") || yuri.keyboard.isDown("ArrowRight")) mcObject.temp.x += delta;
+    };
     if (mcObject.temp.x !== 0 && mcObject.temp.y !== 0) speed *= Math.SQRT1_2;
     if (mcObject.temp.x !== 0 || mcObject.temp.y !== 0) {
       if (mcObject.temp.x < 0) mcObject.direction = 3;
