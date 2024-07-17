@@ -53,6 +53,20 @@ function game() {
     };
     mcObject.x += mcObject.temp.x * speed;
     mcObject.y += mcObject.temp.y * speed;
+    if (mcObject.x < 0) {
+      mcObject.x = 800;
+      mcObject.room.x -= 1;
+    } else if (mcObject.x > 800) {
+      mcObject.x = 0;
+      mcObject.room.x += 1;
+    };
+    if (mcObject.y < 0) {
+      mcObject.y = 600;
+      mcObject.room.y -= 1;
+    } else if (mcObject.y > 600) {
+      mcObject.y = 0;
+      mcObject.room.y += 1;
+    };
     scene.scenery(mcObject.room.x, mcObject.room.y);
     mcEntity.x = ~~mcObject.x;
     mcEntity.y = ~~mcObject.y;
