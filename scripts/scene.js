@@ -3,6 +3,7 @@ var scene = {
   y: undefined,
   loading: false,
   entities: [],
+  hitboxes: [],
   scenery: function(x, y) {
     if (x !== scene.x || y !== scene.y) {
       scene.x = x;
@@ -20,10 +21,15 @@ var scene = {
       var functionName =
         "x" + x.toString().replace("-", "_") +
         "y" + y.toString().replace("-", "_");
-      if (window[functionName]) scene.sceneryObjectGenerate(window[functionName]());
-      else {
+      if (window[functionName]) {
+        var out = window[functionName]();
+        scene.hitboxes = out;
+        scene.sceneryObjectGenerate(out);
+      } else {
         utils.load.script("stage/" + x + "." + y + ".js", function() {
-          scene.sceneryObjectGenerate(window[functionName]());
+          var out = window[functionName]();
+          scene.hitboxes = out;
+          scene.sceneryObjectGenerate(out);
         });
       };
     };
