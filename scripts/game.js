@@ -12,9 +12,19 @@ function game() {
     temp: {
       x: 0,
       y: 0
+    },
+    room: {
+      x: 0,
+      y: 0
     }
   };
   yuri.frame(function(delta) {
+    if (scene.loading) {
+      mcEntity.shown = false;
+      yuri.props.context.fillStyle = "#000";
+      yuri.props.context.fillRect(0, 0, 800, 600);
+      return;
+    } else mcEntity.shown = true;
     var frame = 0;
     var speed = 0.25;
     mcObject.temp.x = 0;
@@ -43,6 +53,7 @@ function game() {
     };
     mcObject.x += mcObject.temp.x * speed;
     mcObject.y += mcObject.temp.y * speed;
+    scene.scenery(mcObject.room.x, mcObject.room.y);
     mcEntity.x = ~~mcObject.x;
     mcEntity.y = ~~mcObject.y;
     if (mcObject.frame > 0) frame = ~~((mcObject.frame % 4) + 1);

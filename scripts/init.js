@@ -3,10 +3,14 @@ addEventListener("DOMContentLoaded", function() {
   var mc;
   var mcSprites = utils.load.image("assets/images/mc_walk.png", function() {
     mc = new yuri.Entity("mc", true, mcSprites, 80, 160);
-    var scripts = ["game", "stage", "scene"];
+    var scripts = [
+      "scripts/game",
+      "scripts/scene",
+      "stage/0.0"
+    ];
     var length = scripts.length;
     var loadCount = 0;
-    utils.load.scripts(scripts, "scripts/", ".js", function() {
+    utils.load.scripts(scripts, "", ".js", function() {
       loadCount += 1;
       if (loadCount >= length) game();
     })
