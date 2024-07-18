@@ -36,7 +36,7 @@ var scene = {
   },
   sceneryObjectGenerate: function(sceneObject) {
     var length = sceneObject.length;
-    scene.entities.push(new yuri.Entity("walls", true, function() {
+    var entity = new yuri.Entity("walls", true, function() {
       yuri.props.context.lineWidth = 2;
       yuri.props.context.strokeStyle = "#f00";
       yuri.props.context.beginPath();
@@ -45,7 +45,9 @@ var scene = {
         yuri.props.context.lineTo(sceneObject[i][1][0], sceneObject[i][1][1]);
       };
       yuri.props.context.stroke();
-    }));
+    });
+    entity.z = -1;
+    scene.entities.push(entity);
     scene.loading = false;
     var loadingBlackOverlay = yuri.getEntityByName("loading-black-overlay");
     if (loadingBlackOverlay) loadingBlackOverlay.destroy();
