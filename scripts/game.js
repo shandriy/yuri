@@ -118,7 +118,7 @@ function game() {
             mcObject.temp.x = movementX;
             mcObject.temp.y = movementY;
             var count = Math.abs(movementX);
-            while (viableCollision() && count >= 0) {
+            while (viableCollision() && count >= -1) {
               count -= 1;
               movementY += movementY < 0 ? 1 : -1;
               movementX += movementX < 0 ? 1 : -1;
@@ -130,7 +130,7 @@ function game() {
           mcObject.temp.x = movementX;
           mcObject.temp.y = movementY;
           var count = Math.abs(movementY);
-          while (viableCollision() && count >= 0) {
+          while (viableCollision() && count >= -1) {
             count -= 1;
             movementY += movementY < 0 ? 1 : -1;
             mcObject.temp.y = movementY;
@@ -140,7 +140,7 @@ function game() {
         mcObject.temp.y = movementY;
         mcObject.temp.x = movementX;
         var count = Math.abs(movementX);
-        while (viableCollision() && count >= 0) {
+        while (viableCollision() && count >= -1) {
           count -= 1;
           movementX += movementX < 0 ? 1 : -1;
           mcObject.temp.x = movementX;
