@@ -51,20 +51,10 @@ function game() {
       if (yuri.keyboard.isDown("KeyD") || yuri.keyboard.isDown("ArrowRight")) mcObject.temp.x += delta;
     };
     if (mcObject.temp.x !== 0 && mcObject.temp.y !== 0) speed *= Math.SQRT1_2;
-    if (mcObject.temp.x !== 0 || mcObject.temp.y !== 0) {
-      if (mcObject.temp.x < 0) mcObject.direction = 3;
-      else if (mcObject.temp.x > 0) mcObject.direction = 2;
-      if (mcObject.temp.y < 0) mcObject.direction = 1;
-      else if (mcObject.temp.y > 0) mcObject.direction = 0;
-      if (mcObject.standing) mcObject.stateFor = mcObject.stateFor > 100 ? 51 : 0;
-      else if (mcObject.stateFor > 50) mcObject.frame += delta * 0.006;
-      mcObject.standing = false;
-    } else {
-      if (!mcObject.standing) mcObject.stateFor = 0;
-      else if (mcObject.stateFor > 100) mcObject.frame = 0;
-      else mcObject.frame += delta * 0.002;
-      mcObject.standing = true;
-    };
+    if (mcObject.temp.x < 0) mcObject.direction = 3;
+    else if (mcObject.temp.x > 0) mcObject.direction = 2;
+    if (mcObject.temp.y < 0) mcObject.direction = 1;
+    else if (mcObject.temp.y > 0) mcObject.direction = 0;
     mcObject.temp.x *= speed;
     mcObject.temp.y *= speed;
     var movementX = mcObject.temp.x;
@@ -146,6 +136,20 @@ function game() {
           mcObject.temp.x = movementX;
         };
       };
+    };
+    if (movementX !== 0 || movementY !== 0) {
+      if (movementX < 0) mcObject.direction = 3;
+      else if (movementX > 0) mcObject.direction = 2;
+      if (movementY < 0) mcObject.direction = 1;
+      else if (movementY > 0) mcObject.direction = 0;
+      if (mcObject.standing) mcObject.stateFor = mcObject.stateFor > 100 ? 51 : 0;
+      else if (mcObject.stateFor > 50) mcObject.frame += delta * 0.006;
+      mcObject.standing = false;
+    } else {
+      if (!mcObject.standing) mcObject.stateFor = 0;
+      else if (mcObject.stateFor > 100) mcObject.frame = 0;
+      else mcObject.frame += delta * 0.002;
+      mcObject.standing = true;
     };
     mcObject.x += movementX;
     mcObject.y += movementY;
