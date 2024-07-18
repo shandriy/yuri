@@ -33,12 +33,15 @@ function game() {
     return lineX >= leastX && lineX <= mostX && lineMostY >= leastY && lineLeastY <= mostY;
   };
   yuri.frame(function(delta) {
+    var length;
     var frame = 0;
     var speed = 0.25;
     mcObject.temp.x = 0;
     mcObject.temp.y = 0;
+    var viableHitboxes = [];
     mcObject.stateFor += delta;
     movementLocked = scene.loading;
+    var mostX, mostY, leastX, leastY;
     yuri.props.context.fillStyle = "#fff";
     yuri.props.context.fillRect(0, 0, 800, 600);
     if (!movementLocked) {
@@ -64,38 +67,88 @@ function game() {
     };
     mcObject.temp.x *= speed;
     mcObject.temp.y *= speed;
-    var cornerX = mcObject.temp.x > 0 ? mcObject.x - 15 : mcObject.x + 15;
-    var cornerY = mcObject.temp.y > 0 ? mcObject.y - 22 : mcObject.y;
-    mcObject.x += mcObject.temp.x;
-    mcObject.y += mcObject.temp.y;
-    if (mcObject.temp.x > 0) mcObject.temp.x += 30;
-    else mcObject.temp.x -= 30;
-    if (mcObject.temp.y > 0) mcObject.temp.y += 22;
-    else mcObject.temp.y -= 22;
-    var mostX = cornerX;
-    var mostY = cornerY;
-    var leastX = cornerX;
-    var leastY = cornerY;
-    if (mcObject.temp.x > 0) mostX += mcObject.temp.x;
-    else leastX += mcObject.temp.x;
-    if (mcObject.temp.y > 0) mostY += mcObject.temp.y;
-    else leastY += mcObject.temp.y;
-    var viableHitboxes = [];
-    var length = scene.hitboxes.length;
+    var movementX = mcObject.temp.x;
+    var movementY = mcObject.temp.y;
+    function setBounding() {
+      var cornerX = mcObject.temp.x > 0 ? mcObject.x - 15 : mcObject.x + 15;
+      var cornerY = mcObject.temp.y > 0 ? mcObject.y - 22 : mcObject.y;
+      if (mcObject.temp.x > 0) mcObject.temp.x += 30;
+      else mcObject.temp.x -= 30;
+      if (mcObject.temp.y > 0) mcObject.temp.y += 22;
+      else mcObject.temp.y -= 22;
+      mostX = cornerX;
+      mostY = cornerY;
+      leastX = cornerX;
+      leastY = cornerY;
+      if (mcObject.temp.x > 0) mostX += mcObject.temp.x;
+      else leastX += mcObject.temp.x;
+      if (mcObject.temp.y > 0) mostY += mcObject.temp.y;
+      else leastY += mcObject.temp.y;
+    };
+    setBounding();
+    length = scene.hitboxes.length;
     for (var i = 0; i < length; i += 1) {
       if (collides(scene.hitboxes[i], leastX, leastY, mostX, mostY))
         viableHitboxes.push(scene.hitboxes[i]);
     };
-    yuri.props.context.lineWidth = 8;
-    yuri.props.context.strokeStyle = "#00f";
-    yuri.props.context.beginPath();
-    for (var i = 0; i < viableHitboxes.length; i += 1) {
-      yuri.props.context.moveTo(viableHitboxes[i][0][0], viableHitboxes[i][0][1]);
-      yuri.props.context.lineTo(viableHitboxes[i][1][0], viableHitboxes[i][1][1]);
+    function viableCollision() {
+      setBounding();
+      length = viableHitboxes.length;
+      for (var i = 0; i < length; i += 1) {
+        if (collides(viableHitboxes[i], leastX, leastY, mostX, mostY))
+          return true;
+      };
+      return false;
     };
-    yuri.props.context.stroke();
-    yuri.props.context.fillStyle = "#0f0";
-    yuri.props.context.fillRect(leastX, leastY, mostX - leastX, mostY - leastY);
+    if (viableHitboxes.length > 0) {
+      movementX = ~~movementX;
+      movementY = ~~movementY;
+      mcObject.temp.x = 0;
+      mcObject.temp.y = movementY;
+      if (viableCollision()) {
+        mcObject.temp.x = movementX;
+        mcObject.temp.y = 0;
+        if (viableCollision()) {
+          mcObject.temp.x = 0;
+          mcObject.temp.y = 0;
+          if (viableCollision()) {
+            mcObject.temp.x = movementX;
+            mcObject.temp.y = movementY;
+          } else {
+            mcObject.temp.x = movementX;
+            mcObject.temp.y = movementY;
+            var count = Math.abs(movementX);
+            while (viableCollision() && count >= 0) {
+              count -= 1;
+              movementY += movementY < 0 ? 1 : -1;
+              movementX += movementX < 0 ? 1 : -1;
+              mcObject.temp.x = movementX;
+              mcObject.temp.y = movementY;
+            };
+          };
+        } else {
+          mcObject.temp.x = movementX;
+          mcObject.temp.y = movementY;
+          var count = Math.abs(movementY);
+          while (viableCollision() && count >= 0) {
+            count -= 1;
+            movementY += movementY < 0 ? 1 : -1;
+            mcObject.temp.y = movementY;
+          };
+        };
+      } else {
+        mcObject.temp.y = movementY;
+        mcObject.temp.x = movementX;
+        var count = Math.abs(movementX);
+        while (viableCollision() && count >= 0) {
+          count -= 1;
+          movementX += movementX < 0 ? 1 : -1;
+          mcObject.temp.x = movementX;
+        };
+      };
+    };
+    mcObject.x += movementX;
+    mcObject.y += movementY;
     if (mcObject.x < 0) {
       mcObject.x = 800;
       mcObject.room.x -= 1;
