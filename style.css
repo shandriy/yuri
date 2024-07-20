@@ -1,0 +1,10 @@
+p {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+}
