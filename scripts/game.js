@@ -20,6 +20,9 @@ function game() {
     }
   };
   var dialogue = yuri.getEntityByName("dialogue");
+  var fillText = !!yuri.props.context.fillText;
+  var dialogueDiv;
+  if (!fillText) dialogueDiv = document.getElementsByTagName("div")[0];
   function collides(line, leastX, leastY, mostX, mostY) {
     var horizontal = line[0][1] === line[1][1];
     if (horizontal) {
@@ -174,5 +177,8 @@ function game() {
     if (mcObject.frame > 0) frame = ~~((mcObject.frame % 4) + 1);
     mcEntity.animation = (mcObject.direction * 5) + frame;
     dialogue.shown = yuri.keyboard.isDown("KeyT");
+    if (!dialogue.shown && !fillText) {
+      dialogueDiv.innerHTML = "";
+    };
   });
 };
