@@ -19,6 +19,7 @@ function game() {
       y: 0
     }
   };
+  var dialogue = yuri.getEntityByName("dialogue");
   function collides(line, leastX, leastY, mostX, mostY) {
     var horizontal = line[0][1] === line[1][1];
     if (horizontal) {
@@ -172,5 +173,6 @@ function game() {
     mcEntity.y = ~~mcObject.y - 80;
     if (mcObject.frame > 0) frame = ~~((mcObject.frame % 4) + 1);
     mcEntity.animation = (mcObject.direction * 5) + frame;
+    dialogue.shown = yuri.keyboard.isDown("KeyT");
   });
 };
