@@ -29,7 +29,7 @@ addEventListener("DOMContentLoaded", function() {
       dialogueDiv.style.left = (left + (40 * multiplier)) + "px";
       dialogueDiv.style.fontSize = (25 * multiplier) + "px";
     };
-    addEventListener("resize", resize);
+    addEventListener("resize", resize, false);
     resize();
   };
   var dialogue = new yuri.Entity("dialogue", false, function() {
@@ -67,4 +67,4 @@ addEventListener("DOMContentLoaded", function() {
       if (loadCount >= length) game();
     })
   });
-});
+}, false);
